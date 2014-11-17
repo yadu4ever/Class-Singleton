@@ -13,7 +13,7 @@
 #
 #----------------------------------------------------------------------------
 #
-# $Id: Singleton.pm,v 1.1 1998/02/10 09:40:40 abw Exp abw $
+# $Id: Singleton.pm,v 1.2 1998/04/16 14:10:16 abw Exp $
 #
 #============================================================================
 
@@ -24,8 +24,8 @@ require 5.004;
 use strict;
 use vars qw( $RCS_ID $VERSION );
 
-$VERSION = sprintf("%d.%02d", q$Revision: 1.1 $ =~ /(\d+)\.(\d+)/);
-$RCS_ID  = q$Id: Singleton.pm,v 1.1 1998/02/10 09:40:40 abw Exp abw $;
+$VERSION = sprintf("%d.%02d", q$Revision: 1.2 $ =~ /(\d+)\.(\d+)/);
+$RCS_ID  = q$Id: Singleton.pm,v 1.2 1998/04/16 14:10:16 abw Exp $;
 
 
 
@@ -70,7 +70,7 @@ sub instance {
 
 #========================================================================
 #
-# _instance_variable()
+# _instance_var()
 #
 # Returns a reference to the instance variable, $_instance, in the 
 # calling package.
@@ -265,7 +265,7 @@ of the base class instance() method to create the object instance.
         my $class = ref($self) || $self;
 
         # get a reference to the instance variable
-        my $instvar = #self->_instance_var();
+        my $instvar = $self->_instance_var();
 
         # see if an instance is defined
         if (defined($$instvar)) {
@@ -305,9 +305,8 @@ as follows:
         my $self  = shift;
         my $class = ref($self) || $self;
 
-        # create a temporary $self instance blessed into a 
-        # common 'PrintSpooler' class 
-        $self = bless {}, 'PrintSpooler';
+        # create a temporary $self instance blessed into the base class
+        $self = bless {};
 
         # all derived classes now look like a 'PrintSpooler'
         # when they call Class::Singleton->instance())
@@ -345,7 +344,7 @@ SAS Group, Canon Research Centre Europe Ltd.
 
 =head1 REVISION
 
-$Revision: 1.1 $
+$Revision: 1.2 $
 
 =head1 COPYRIGHT
 

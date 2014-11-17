@@ -68,10 +68,10 @@ sub instance {
     my $self  = shift;
     my $class = ref($self) || $self;
 
-    # create a temporary $self instance blessed into UniqueSingleton 
-    # class (so that all derived classes look like a 'UniqueSingleton'
-    # when they call Class::Singleton::instance())
-    $self = bless {}, 'UniqueSingleton';
+    # create a temporary $self instance blessed into the current
+    # UniqueSingleton class so that all derived classes look like a 
+    # 'UniqueSingleton' when they call Class::Singleton::instance())
+    $self = bless {};
 
     # call Classs::Singleton->instance() while masquerading...
     $self = $self->SUPER::instance();
