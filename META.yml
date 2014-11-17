@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:                Class-Singleton
-version:             1.4
+version:             1.5
 abstract:            Base class for creating singleton objects
 license:             ~
 generated_by:        ExtUtils::MakeMaker version 6.31

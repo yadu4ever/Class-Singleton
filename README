@@ -3,7 +3,7 @@ NAME
 
 SYNOPSIS
         use Class::Singleton;
-    
+
         my $one = Class::Singleton->instance();   # returns a new instance
         my $two = Class::Singleton->instance();   # returns same instance
 
@@ -32,9 +32,9 @@ INSTALLATION
         CPAN stands for the Comprehensive Perl Archive Network.
         This is a globally replicated collection of all known Perl
         materials, including hundreds of unbunded modules.
-    
+
         [...]
-    
+
         For an up-to-date listing of CPAN sites, see
         http://www.perl.com/perl/ or ftp://ftp.perl.com/perl/ .
 
@@ -103,12 +103,12 @@ DERIVING SINGLETON CLASSES
 
         package PrintSpooler;
         use base 'Class::Singleton';
-    
+
         # derived class specific code
         sub submit_job {
             ...
         }
-    
+
         sub cancel_job {
             ...
         }
@@ -116,9 +116,9 @@ DERIVING SINGLETON CLASSES
     The "PrintSpooler" class defined above could be used as follows:
 
         use PrintSpooler;
-    
+
         my $spooler = PrintSpooler->instance();
-    
+
         $spooler->submit_job(...);
 
     The instance() method calls the _new_instance() constructor method the
@@ -130,23 +130,23 @@ DERIVING SINGLETON CLASSES
 
         package MyConfig;
         use base 'Class::Singleton';
-    
+
         sub foo {
             shift->{ foo };
         }
-    
+
         sub bar {
             shift->{ bar };
         }
-    
+
         package main;
-    
+
         # either: hash reference of named parameters
         my $config = MyConfig->instance({ foo => 10, bar => 20 });
-    
+
         # or: list of named parameters
         my $config = MyConfig->instance( foo => 10, bar => 20 );
-    
+
         print $config->foo();   # 10
         print $config->bar();   # 20
 
@@ -157,26 +157,26 @@ DERIVING SINGLETON CLASSES
         package MyApp::Database;
         use base 'Class::Singleton';
         use DBI;
-    
+
         # this only gets called the first time instance() is called
         sub _new_instance {
             my $class = shift;
             my $self  = bless { }, $class;
-            my $db    = shift || "myappdb";    
+            my $db    = shift || "myappdb";
             my $host  = shift || "localhost";
-        
+
             $self->{ DB } = DBI->connect("DBI:mSQL:$db:$host")
                 || die "Cannot connect to database: $DBI::errstr";
-        
+
             # any other initialisation...
-        
+
             return $self;
         }
 
     The above example might be used as follows:
 
         use MyApp::Database;
-    
+
         # first use - database gets initialised
         my $database = MyApp::Database->instance();
 
@@ -184,10 +184,10 @@ DERIVING SINGLETON CLASSES
 
         package MyApp::FooBar
         use MyApp::Database;
-    
+
         # this FooBar object needs access to the database; the Singleton
         # approach gives a nice wrapper around global variables.
-    
+
         sub new {
             my $class = shift;
             bless {
@@ -195,19 +195,13 @@ DERIVING SINGLETON CLASSES
             }, $class;
         }
 
-    The "Class::Singleton" instance() method uses a package variable to
-    store a reference to any existing instance of the object. This variable,
-    ""_instance"", is coerced into the derived class package rather than the
-    base class package.
-
-    Thus, in the "MyApp::Database" example above, the instance variable
-    would be:
-
-        $MyApp::Database::_instance;
+    The "Class::Singleton" instance() method uses a private hash to store a
+    reference to any existing instance of the object, keyed against the
+    derived class package name.
 
     This allows different classes to be derived from "Class::Singleton" that
     can co-exist in the same system, while still allowing only one instance
-    of any one class to exists. For example, it would be possible to derive
+    of any one class to exist. For example, it would be possible to derive
     both '"PrintSpooler"' and '"MyApp::Database"' from "Class::Singleton"
     and have a single instance of *each* in a system, rather than a single
     instance of *either*.
@@ -258,7 +252,7 @@ AUTHOR
     and other ideas.
 
 VERSION
-    This is version 1.4, released September 2007
+    This is version 1.5, released November 2014
 
 COPYRIGHT
     Copyright Andy Wardley 1998-2007. All Rights Reserved.
