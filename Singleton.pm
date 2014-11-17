@@ -13,7 +13,7 @@
 #
 #----------------------------------------------------------------------------
 #
-# $Id: Singleton.pm,v 1.2 1998/04/16 14:10:16 abw Exp $
+# $Id: Singleton.pm,v 1.3 1999/01/19 15:57:43 abw Exp $
 #
 #============================================================================
 
@@ -24,8 +24,8 @@ require 5.004;
 use strict;
 use vars qw( $RCS_ID $VERSION );
 
-$VERSION = sprintf("%d.%02d", q$Revision: 1.2 $ =~ /(\d+)\.(\d+)/);
-$RCS_ID  = q$Id: Singleton.pm,v 1.2 1998/04/16 14:10:16 abw Exp $;
+$VERSION = sprintf("%d.%02d", q$Revision: 1.3 $ =~ /(\d+)\.(\d+)/);
+$RCS_ID  = q$Id: Singleton.pm,v 1.3 1999/01/19 15:57:43 abw Exp $;
 
 
 
@@ -45,46 +45,48 @@ $RCS_ID  = q$Id: Singleton.pm,v 1.2 1998/04/16 14:10:16 abw Exp $;
 # that you can create any number of classes derived from Class::Singleton
 # and create a single instance of each one.  If the _instance variable
 # was stored in the Class::Singleton package, you could only instantiate 
-# *ONE* object of *ANY* class derived from Class::Singleton.
+# *ONE* object of *ANY* class derived from Class::Singleton.  The first
+# time the instance is created, the _new_instance() constructor is called 
+# which simply returns a reference to a blessed hash.  This can be 
+# overloaded for custom constructors.  Any addtional parameters passed to 
+# instance() are forwarded to _new_instance().
 #
 # Returns a reference to the existing, or a newly created Class::Singleton
-# object.
+# object.  If the _new_instance() method returns an undefined value
+# then the constructer is deemed to have failed.
 #
 #========================================================================
 
 sub instance {
-    my $self  = shift;
-    my $class = ref($self) || $self;
+    my $class = shift;
 
     # get a reference to the _instance variable in the $class package 
-    my $instance = $self->_instance_var();
-
-    $self  = defined $$instance
-	? $$instance
-	: ($$instance = bless {}, $class);
-
-    $self;
-}
-
-
-
-#========================================================================
-#
-# _instance_var()
-#
-# Returns a reference to the instance variable, $_instance, in the 
-# calling package.
-#
-#========================================================================
-
-sub _instance_var {
-    my $self = shift;
-    my $class = ref($self) || $self;
-
-    # return a reference to the '_instance' variable in $class package
     no strict 'refs';
-    \${ "$class\::_instance" };
+    my $instance = \${ "$class\::_instance" };
+
+    defined $$instance
+	? $$instance
+	: ($$instance = $class->_new_instance(@_));
 }
+
+
+
+#========================================================================
+#
+# _new_instance(...)
+#
+# Simple constructor which returns a hash reference blessed into the 
+# current class.  May be overloaded to create non-hash objects or 
+# handle any specific initialisation required.
+#
+# Returns a reference to the blessed hash.
+#
+#========================================================================
+
+sub _new_instance {
+    bless { }, $_[0];
+}
+
 
 
 1;
@@ -226,125 +228,100 @@ The PrintSpooler class defined above could be used as follows:
 
     $spooler->submit_job(...);
 
+The instance() method calls the _new_instance() constructor method the 
+first and only time a new instance is created.  All parameters passed to 
+the instance() method are forwarded to _new_instance().  In the base class
+this method returns a blessed reference to an empty hash array.  Derived 
+classes may redefine it to provide specific object initialisation or change
+the underlying object type (to a list reference, for example).
+
+    package MyApp::Database;
+    use vars qw( $ERROR );
+    use base qw( Class::Singleton );
+    use DBI;
+
+    $ERROR = '';
+
+    # this only gets called the first time instance() is called
+    sub _new_instance {
+	my $class = shift;
+	my $self  = bless { }, $class;
+	my $db    = shift || "myappdb";    
+	my $host  = shift || "localhost";
+
+	unless (defined ($self->{ DB } 
+			 = DBI->connect("DBI:mSQL:$db:$host"))) {
+	    $ERROR = "Cannot connect to database: $DBI::errstr\n";
+	    # return failure;
+	    return undef;
+	}
+
+	# any other initialisation...
+	
+	# return sucess
+	$self;
+    }
+
+The above example might be used as follows:
+
+    use MyApp::Database;
+
+    # first use - database gets initialised
+    my $database = MyApp::Database->instance();
+    die $MyApp::Database::ERROR unless defined $database;
+
+Some time later on in a module far, far away...
+
+    package MyApp::FooBar
+    use MyApp::Database;
+
+    sub new {
+	# usual stuff...
+	
+	# this FooBar object needs access to the database; the Singleton
+	# approach gives a nice wrapper around global variables.
+
+	# subsequent use - existing instance gets returned
+	my $database = MyApp::Database->instance();
+
+	# the new() isn't called if an instance already exists,
+	# so the above constructor shouldn't fail, but we check
+	# anyway.  One day things might change and this could be the
+	# first call to instance()...  
+	die $MyAppDatabase::ERROR unless defined $database;
+
+	# more stuff...
+    }
+
 The Class::Singleton instance() method uses a package variable to store a
 reference to any existing instance of the object.  This variable, 
 "_instance", is coerced into the derived class package rather than
 the base class package.
 
-Thus, in the PrintSpooler example above, the instance variable would
+Thus, in the MyApp::Database example above, the instance variable would
 be:
 
-    $PrintSpooler::_instance;
+    $MyApp::Database::_instance;
 
 This allows different classes to be derived from Class::Singleton that 
 can co-exist in the same system, while still allowing only one instance
 of any one class to exists.  For example, it would be possible to 
-derive both 'PrintSpooler' and 'Registry' from Class::Singleton and
+derive both 'PrintSpooler' and 'MyApp::Database' from Class::Singleton and
 have a single instance of I<each> in a system, rather than a single 
 instance of I<either>.
-
-Note that the _instance variable is considered private and is not intended
-to be manipulated directly.  The _instance_var() method is provided for
-derived classes to access the variable.  It returns a reference to the 
-variable in the correct package.  When no previous instance of the class
-exists, the value of the variable referenced will be undefined (undef).
-
-Consider a case where a Singleton class requires some initialization 
-process.  The initialization code should be executed one and only once
-when the sole instance is created.  The Class::Singleton instance() method
-can be overloaded in the following way to acheieve this.  Note the use of
-_instance_var() to gain access to the instance variable, and the calling
-of the base class instance() method to create the object instance.
-
-    package PrintSpooler;
-    use vars qw(@ISA);
-    @ISA = qw(Class::Singleton);
-
-    sub instance {
-        my $self  = shift;
-        my $class = ref($self) || $self;
-
-        # get a reference to the instance variable
-        my $instvar = $self->_instance_var();
-
-        # see if an instance is defined
-        if (defined($$instvar)) {
-               $self = $$instvar;
-	}
-        else {
-            # call base class instance() constructor
-            $self = $self->SUPER::instance();
-
-            # call any initialization code
-            $self->initialize(@_);
-        }
-	
-        return $self;
-    }
-
-By coercing the instance variable into the derived class package it is 
-possible to have many classes derived from Class::Singleton that each 
-can have one and only once instance.  However, there may be times when 
-there should be only one instance of one or more derived classes.
-
-Returning to the print spooler example, we know that only one print 
-spooler can be defined in a system.  We may have defined a number of 
-different print spoolers classes, any one of which can be instantiated 
-and used.  From that point on, it should not be possible to create any
-other PrintSpooler or derived class.  
-
-This can be acheived by deriving all mutually exclusive classes from a 
-common base class.  The base class instance() method should be overload
-as follows:
-
-    package PrintSpooler;
-    use vars qw(@ISA);
-    @ISA = qw(Class::Singleton);
-
-    sub instance {
-        my $self  = shift;
-        my $class = ref($self) || $self;
-
-        # create a temporary $self instance blessed into the base class
-        $self = bless {};
-
-        # all derived classes now look like a 'PrintSpooler'
-        # when they call Class::Singleton->instance())
-        $self = $self->SUPER::instance();
-
-        # now bless returned instance into the required class
-        bless $self, $class;
-    }
-
-Using this approach, only one instance of I<any> class derived from 
-PrintSpooler will be instantiated.
-
-    package PrintSpoolerOne;
-    use vars qw(@ISA);
-    @ISA = qw(PrintSpooler);
-
-    package PrintSpoolerTwo;
-    use vars qw(@ISA);
-    @ISA = qw(PrintSpooler);
-
-    package main;
-    
-    my $spooler1 = PrintSpoolerOne->instance();
-    my $spooler2 = PrintSpoolerTwo->instance();
-
-In the above code, both $spooler1 and $spooler2 will reference the same 
-hash, although they will be blessed into their respective PrintSpoolerOne
-and PrintSpoolerTwo classes.
 
 =head1 AUTHOR
 
 Andy Wardley, C<E<lt>abw@cre.canon.co.ukE<gt>>
 
-SAS Group, Canon Research Centre Europe Ltd.
+Web Technology Group, Canon Research Centre Europe Ltd.
+
+Thanks to Andreas Koenig C<E<lt>andreas.koenig@anima.deE<gt>> for providing
+some significant speedup patches and other ideas.
 
 =head1 REVISION
 
-$Revision: 1.2 $
+$Revision: 1.3 $
 
 =head1 COPYRIGHT
 
@@ -357,16 +334,13 @@ the term of the Perl Artistic License.
 
 =over 4
 
-=item Andy Wardley's Home Page
+=item Canon Research Centre Europe Perl Pages
+
+http://www.cre.canon.co.uk/perl/
+
+=item The Author's Home Page
 
 http://www.kfs.org/~abw/
-
-=item The SAS Group Home Page
-
-http://www.cre.canon.co.uk/sas.html
-
-The research group at Canon Research Centre Europe responsible for 
-development of Class::Singleton and similar tools.
 
 =item Design Patterns
 

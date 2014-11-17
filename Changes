@@ -19,3 +19,22 @@
 * Fixed minor typos and corrected example in documentation.
 
 
+#------------------------------------------------------------------------
+# Version 1.03   Date: 1999/01/19 15:57:43
+#------------------------------------------------------------------------
+
+* Incorporated patches from Andreas Koenig to inline calculation of 
+  $instance variable.  This results in a speedup of around 35%.
+
+* Added _new_instance() constructor which is called the first time
+  _instance() is called.  This can be overloaded in derived classes 
+  to provide more specific object initialisation.
+
+* Updated documentation accordingly.
+
+
+
+
+
+
+

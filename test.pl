@@ -1,115 +1,97 @@
-# Before `make install' is performed this script should be runnable with
-# `make test'. After `make install' it should work as `perl test.pl'
+#
+# Class::Singleton test script
+#
+# Andy Wardley <abw@cre.canon.co.uk>
+#
 
-######################### We start with some black magic to print on failure.
+BEGIN { 
+    $| = 1; 
+    print "1..22\n"; 
+}
 
-# Change 1..1 below to 1..last_test_to_print .
-# (It may become useful if the test is moved to ./t subdirectory.)
+END   { 
+    print "not ok 1\n" unless $loaded;
+}
 
-BEGIN { $| = 1; print "1..20\n"; }
-END {print "not ok 1\n" unless $loaded;}
 use Class::Singleton;
+
 $loaded = 1;
 print "ok 1\n";
-
-######################### End of black magic.
-
-# Insert your test code below (better if it prints "ok 13"
-# (correspondingly "not ok 13") depending on the success of chunk 13
-# of the test code):
 
 # turn warnings on
 $^W = 1;
 
 
+
 #========================================================================
-#
-# define 'MySingleton', a class derived from Class::Singleton 
-#
+#                           -- UTILITY SUBS --
 #========================================================================
+
+sub ok     {
+    return join('', @_ ? ("   ", @_, "\n") : (), "ok ",     ++$loaded, "\n");
+}
+
+sub not_ok { 
+    return join('', @_ ? ("   ", @_, "\n") : (), "not ok ", ++$loaded, "\n");
+}
+
+
+
+#========================================================================
+#                         -- CLASS DEFINTIONS --
+#========================================================================
+
+#------------------------------------------------------------------------
+# define 'DerivedSingleton', a class derived from Class::Singleton 
+#------------------------------------------------------------------------
 
 package DerivedSingleton;
-
-use vars qw(@ISA);
-@ISA = qw(Class::Singleton);
+use base 'Class::Singleton';
 
 
-
-#========================================================================
-#
-# define 'MyOtherSingleton', a class derived from MySingleton 
-#
-#========================================================================
+#------------------------------------------------------------------------
+# define 'AnotherSingleton', a class derived from DerivedSingleton 
+#------------------------------------------------------------------------
 
 package AnotherSingleton;
-
-use vars qw(@ISA);
-@ISA = qw(DerivedSingleton);
+use base 'DerivedSingleton';
 
 
+#------------------------------------------------------------------------
+# define 'ListSingleton', which uses a list reference as its type
+#------------------------------------------------------------------------
 
-#========================================================================
-#
-# define 'UniqueSingleton', where we adapt instance() to only allow
-# one instance of all and any derived classes.  We do this by forcing 
-# all derived classes to call the Class::Singleton instance() method
-# masqueraded as UniqueSingleton->instance() (no matter what the derived
-# class name might be).  The reference returned is then re-blessed into
-# the current derived class.
-#
-#========================================================================
+package ListSingleton;
+use base 'Class::Singleton';
 
-package UniqueSingleton;
+sub _new_instance {
+    my $class  = shift;
+    bless [], $class;
+}
 
-use vars qw(@ISA);
-@ISA = qw(Class::Singleton);
 
-sub instance {
-    my $self  = shift;
-    my $class = ref($self) || $self;
+#------------------------------------------------------------------------
+# define 'ConfigSingleton', which has specific configuration needs.
+#------------------------------------------------------------------------
 
-    # create a temporary $self instance blessed into the current
-    # UniqueSingleton class so that all derived classes look like a 
-    # 'UniqueSingleton' when they call Class::Singleton::instance())
-    $self = bless {};
+package ConfigSingleton;
+use base 'Class::Singleton';
 
-    # call Classs::Singleton->instance() while masquerading...
-    $self = $self->SUPER::instance();
-
-    # ...and then bless returned instance into the required class
+sub _new_instance {
+    my $class  = shift;
+    my $config = shift || { };
+    my $self = {
+	'one' => 'This is the first parameter',
+	'two' => 'This is the second parameter',
+	%$config,
+    };
     bless $self, $class;
 }
 
 
-#========================================================================
-#
-# create two classes derived from UniqueSingleton which should then be
-# mutually exclusive
-#
-#========================================================================
-
-package UniqueSingletonOne;
-
-use vars qw(@ISA);
-@ISA = qw(UniqueSingleton);
-
-sub one { my $self = shift; print "$self->one(", join(', ', @_), ")\n"; };
-
-#------------------------------------------------------------------------
-
-package UniqueSingletonTwo;
-
-use vars qw(@ISA);
-@ISA = qw(UniqueSingleton);
-
-sub two { my $self = shift; print "$self->two(", join(', ', @_), ")\n"; };
-
 
 #========================================================================
-#
-# We should be able to create one and only once instance of each of
-# Class::Singleton, MySingleton and MyOtherSingleton.
-#
+#                                -- TESTS --
 #========================================================================
 
 package main;
@@ -119,14 +101,17 @@ package main;
 
 my $s1 = Class::Singleton->instance();
 
-print "Class::Singleton instance 1: ",
+#2 
+print "   Class::Singleton instance 1: ",
     defined($s1) ? ok($s1) : not_ok('<undef>');
 
 my $s2 = Class::Singleton->instance();
 
-print "Class::Singleton instance 2: ",
+#3
+print "   Class::Singleton instance 2: ",
     (defined($s2) ? ok($s2) : not_ok('<undef>'));
 
+#4
 print $s1 == $s2 
     ? ok('Class::Singleton instances are identical') 
     : not_ok('Class::Singleton instances are unique');
@@ -137,14 +122,17 @@ print $s1 == $s2
 
 my $s3 = DerivedSingleton->instance();
 
-print "DerivedSingleton instance 1: ", 
+#5
+print "   DerivedSingleton instance 1: ", 
     defined($s3) ? ok($s3) : not_ok('<undef>');
 
 my $s4 = DerivedSingleton->instance();
 
-print "DerivedSingleton instance 2: ", 
+#6
+print "   DerivedSingleton instance 2: ", 
     defined($s4) ? ok($s4) : not_ok('<undef>');
 
+#7
 print $s3 == $s4 
     ? ok("DerivedSingleton instances are identical")
     : not_ok("DerivedSingleton instances are unique");
@@ -155,27 +143,29 @@ print $s3 == $s4
 
 my $s5 = AnotherSingleton->instance();
 
-print "AnotherSingleton instance 1: ",
+#8
+print "   AnotherSingleton instance 1: ",
     defined($s5) ? ok($s5) : not_ok('<undef>');
 
 my $s6 = AnotherSingleton->instance();
 
-print "AnotherSingleton instance 2: ",
+#9
+print "   AnotherSingleton instance 2: ",
     defined($s6) ? ok($s6) : not_ok('<undef>');
 
+#10
 print $s5 == $s6 
     ? ok("AnotherSingleton instances are identical")
     : not_ok("AnotherSingleton instances are unique");
 
 
-#========================================================================
-#
+#------------------------------------------------------------------------
 # having checked that each instance of the same class is the same, we now
 # check that the instances of the separate classes are actually different 
 # from each other 
-#
-#========================================================================
+#------------------------------------------------------------------------
 
+#11-13
 print $s1 != $s3 
     ? ok("Class::Singleton and DerviedSingleton are different") 
     : not_ok("Class::Singleton and DerivedSingleton are identical");
@@ -188,72 +178,75 @@ print $s3 != $s5
 
 
 
-#========================================================================
-#
-# the two classes derived from UniqueSingleton should be mutually 
-# exclusive.  That is, the instances of different classes should be 
-# the same.
-#
-#========================================================================
+#------------------------------------------------------------------------
+# test ListSingleton
+#------------------------------------------------------------------------
 
-my $s7 = UniqueSingletonOne->instance();
+my $ls1 = ListSingleton->instance();
+my $ls2 = ListSingleton->instance();
 
-print "UniqueSingetonOne instance 1: ",
-    defined($s7) ? ok($s7) : not_ok('<undef>');
+#14
+print $ls1
+    ? ok("ListSingleton #1 is defined")
+    : not_ok("ListSingleton #1 is not defined");
 
-# test method calls (one() should work, two() shouldn't)
-eval {
-    $s7->one("This is one");
-};
-print $@
-    ? not_ok($@)
-    : ok("UniqueSingletonOne is correctly blessed (1/2)");
+#15
+print $ls2
+    ? ok("ListSingleton #2 is defined")
+    : not_ok("ListSingleton #2 is not defined");
 
-eval {
-    $s7->two("This is two");
-};
-print $@
-    ? ok("UniqueSingletonOne is correctly blessed (2/2)")
-    : not_ok("Called a non-existant method on UniqueSingletonOne");
+#16 - check they are the same reference
+print $ls1 == $ls2
+    ? ok("ListSingleton #1 and #2 correctly reference the same list")
+    : not_ok("ListSingleton #1 and #2 so not reference the same list");
 
-
-my $s8 = UniqueSingletonTwo->instance();
-
-print "UniqueSingetonTwo instance 1: ",
-    defined($s8) ? ok($s8) : not_ok('<undef>');
-
-# test method calls (one() shouldn't work, two() should)
-eval {
-    $s8->two("This is two");
-};
-print $@
-    ? not_ok($@)
-    : ok("UniqueSingletonTwo is correctly blessed (1/2)");
-
-eval {
-    $s7->one("This is two");
-};
-print $@
-    ? ok("UniqueSingletonTwo is correctly blessed (2/2)")
-    : not_ok("Called a non-existant method on UniqueSingletonTwo");
+#17 - check it's a LIST reference
+print $ls1 =~ /=ARRAY/
+    ? ok("ListSingleton correctly contains a list reference")
+    : not_ok("ListSingleton does not contain a list reference");
 
 
-print $s7 == $s8 
-    ? ok("UniqueSingleton derived instances are identical")
-    : not_ok("UniqueSingleton derived instances instances are unique");
+
+#------------------------------------------------------------------------
+# test ConfigSingleton
+#------------------------------------------------------------------------
+
+# create a ConfigSingleton
+my $config = { 'foo' => 'This is foo' };
+my $cs1 = ConfigSingleton->instance($config);
+
+# add another parameter to the config
+$config->{'bar'} => 'This is bar';
+
+# shouldn't call new() so changes to $config shouldn't matter
+my $cs2 = ConfigSingleton->instance($config);
+
+#18
+print $cs1
+    ? ok("ConfigSingleton #1 is defined")
+    : not_ok("ConfigSingleton #1 is not defined");
+
+#19
+print $cs2
+    ? ok("ConfigSingleton #2 is defined")
+    : not_ok("ConfigSingleton #2 is not defined");
+
+#20 - check they are the same reference
+print $cs1 == $cs2
+    ? ok("ConfigSingleton #1 and #2 correctly reference the same object")
+    : not_ok("ConfigSingleton #1 and #2 so not reference the same object");
+
+#21 - check that 3 keys are defined in $cs1
+print scalar(keys %$cs1) == 3
+    ? ok("ConfigSingleton #1 correctly has 3 keys")
+    : not_ok("ConfigSingleton #1 does not have 3 keys");
+
+#22 - and also in $cs2
+print scalar(keys %$cs2) == 3
+    ? ok("ConfigSingleton #2 correctly has 3 keys")
+    : not_ok("ConfigSingleton #2 does not have 3 keys");
 
 
-#========================================================================
-#
-# ok/not_ok subs
-#
-#========================================================================
 
-sub ok     { 
-    return join('', @_ ? (@_, "\n") : (), "ok ", ++$loaded, "\n");
-}
 
-sub not_ok { 
-    return join('', @_ ? (@_, "\n") : (), "not ok ", ++$loaded, "\n");
-}
 
