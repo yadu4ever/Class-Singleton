@@ -19,7 +19,7 @@ require 5.004;
 use strict;
 use warnings;
 
-our $VERSION = 1.5;
+our $VERSION = 1.6;
 my %_INSTANCES = ();
 
 
@@ -370,7 +370,7 @@ other ideas.
 
 =head1 VERSION
 
-This is version 1.5, released November 2014
+This is version 1.6, released TODO
 
 =head1 COPYRIGHT
 
