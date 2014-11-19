@@ -36,7 +36,7 @@ my %_INSTANCES = ();
 # *ONE* object of *ANY* class derived from Class::Singleton.  The first
 # time the instance is created, the _new_instance() constructor is called 
 # which simply returns a reference to a blessed hash.  This can be 
-# overloaded for custom constructors.  Any addtional parameters passed to 
+# overloaded for custom constructors.  Any additional parameters passed to 
 # instance() are forwarded to _new_instance().
 #
 # Returns a reference to the existing, or a newly created Class::Singleton
