@@ -21,7 +21,7 @@ DESCRIPTION
     Patterns", Gamma et al, Addison-Wesley, 1995, ISBN 0-201-63361-2.
 
 PREREQUISITES
-    "Class::Singleton" requires Perl version 5.004 or later. If you have an
+    "Class::Singleton" requires Perl version 5.8.1 or later. If you have an
     older version of Perl, please upgrade to latest version, available from
     your nearest CPAN site (see INSTALLATION below).
 
@@ -251,11 +251,16 @@ AUTHOR
     Thanks to Andreas Koenig for providing some significant speedup patches
     and other ideas.
 
+    Steve Hay <shay@cpan.orgt> is now maintaining Class::Singleton as of
+    version 1.5
+
 VERSION
     This is version 1.6, released TODO
 
 COPYRIGHT
     Copyright Andy Wardley 1998-2007. All Rights Reserved.
+    Changes in Version 1.5 onwards Copyright (C) 2014 Steve Hay. All rights
+    reserved.
 
     This module is free software; you can redistribute it and/or modify it
     under the same terms as Perl itself.

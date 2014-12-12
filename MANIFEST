@@ -1,7 +1,10 @@
-Changes
-MANIFEST
-Makefile.PL
-README
-lib/Class/Singleton.pm
-t/singleton.t
-META.yml                                 Module meta-data (added by MakeMaker)
+Changes                                  Change log
+Makefile.PL                              ExtUtils::MakeMaker script
+MANIFEST                                 This file
+README                                   A brief overview of the distribution
+lib/Class/Singleton.pm                   Class::Singleton module
+t/changes.t                              Test script
+t/critic.t                               Test script
+t/pod.t                                  Test script
+t/pod_coverage.t                         Test script
+t/singleton.t                            Test script
