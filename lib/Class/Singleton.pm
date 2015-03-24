@@ -14,6 +14,10 @@
 # Changes in Version 1.5 onwards Copyright (C) 2014 Steve Hay.  All rights
 # reserved.
 #
+# This module is free software; you can redistribute it and/or modify it under
+# the same terms as Perl itself, i.e. under the terms of either the GNU General
+# Public License or the Artistic License, as specified in the F<LICENCE> file.
+#
 #============================================================================
 
 package Class::Singleton;
@@ -383,7 +387,10 @@ Copyright Andy Wardley 1998-2007.  All Rights Reserved.
 Changes in Version 1.5 onwards Copyright (C) 2014 Steve Hay.  All rights
 reserved.
 
-This module is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself.
+=head1 LICENCE
+
+This module is free software; you can redistribute it and/or modify it under the
+same terms as Perl itself, i.e. under the terms of either the GNU General Public
+License or the Artistic License, as specified in the F<LICENCE> file.
 
 =cut
