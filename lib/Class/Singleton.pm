@@ -137,61 +137,6 @@ specific functionality is required.
 For a description and discussion of the Singleton class, see 
 "Design Patterns", Gamma et al, Addison-Wesley, 1995, ISBN 0-201-63361-2.
 
-=head1 PREREQUISITES
-
-C<Class::Singleton> requires Perl version 5.8.1 or later. If you have an older
-version of Perl, please upgrade to latest version, available from your nearest
-CPAN site (see L<INSTALLATION> below).
-
-=head1 INSTALLATION
-
-The C<Class::Singleton> module is available from CPAN. As the 'perlmod' man
-page explains:
-
-    CPAN stands for the Comprehensive Perl Archive Network.
-    This is a globally replicated collection of all known Perl
-    materials, including hundreds of unbunded modules.
-    
-    [...]
-    
-    For an up-to-date listing of CPAN sites, see
-    http://www.perl.com/perl/ or ftp://ftp.perl.com/perl/ .
-
-The module is available in the following directories:
-
-    /modules/by-module/Class/Class-Singleton-<version>.tar.gz
-    /authors/id/ABW/Class-Singleton-<version>.tar.gz
-
-C<Class::Singleton> is distributed as a single gzipped tar archive file:
-
-    Class-Singleton-<version>.tar.gz
-
-Note that "<version>" represents the current version number, of the 
-form "C<1.23>".  See L<VERSION> below to determine the current version 
-number for C<Class::Singleton>.
-
-Unpack the archive to create an installation directory:
-
-    gunzip Class-Singleton-<version>.tar.gz
-    tar xvf Class-Singleton-<version>.tar
-
-'cd' into that directory, make, test and install the module:
-
-    cd Class-Singleton-<version>
-    perl Makefile.PL
-    make
-    make test
-    make install
-
-The 'C<make install>' will install the module on your system.  You may need 
-root access to perform this task.  If you install the module in a local 
-directory (for example, by executing "C<perl Makefile.PL LIB=~/lib>" in the 
-above - see C<perldoc MakeMaker> for full details), you will need to ensure 
-that the C<PERL5LIB> environment variable is set to include the location, or 
-add a line to your scripts explicitly naming the library location:
-
-    use lib '/local/path/to/lib';
-
 =head1 USING THE CLASS::SINGLETON MODULE
 
 To import and use the C<Class::Singleton> module the following line should 

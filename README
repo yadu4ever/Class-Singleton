@@ -20,60 +20,6 @@ DESCRIPTION
     For a description and discussion of the Singleton class, see "Design
     Patterns", Gamma et al, Addison-Wesley, 1995, ISBN 0-201-63361-2.
 
-PREREQUISITES
-    "Class::Singleton" requires Perl version 5.8.1 or later. If you have an
-    older version of Perl, please upgrade to latest version, available from
-    your nearest CPAN site (see INSTALLATION below).
-
-INSTALLATION
-    The "Class::Singleton" module is available from CPAN. As the 'perlmod'
-    man page explains:
-
-        CPAN stands for the Comprehensive Perl Archive Network.
-        This is a globally replicated collection of all known Perl
-        materials, including hundreds of unbunded modules.
-
-        [...]
-
-        For an up-to-date listing of CPAN sites, see
-        http://www.perl.com/perl/ or ftp://ftp.perl.com/perl/ .
-
-    The module is available in the following directories:
-
-        /modules/by-module/Class/Class-Singleton-<version>.tar.gz
-        /authors/id/ABW/Class-Singleton-<version>.tar.gz
-
-    "Class::Singleton" is distributed as a single gzipped tar archive file:
-
-        Class-Singleton-<version>.tar.gz
-
-    Note that "<version>" represents the current version number, of the form
-    "1.23". See VERSION below to determine the current version number for
-    "Class::Singleton".
-
-    Unpack the archive to create an installation directory:
-
-        gunzip Class-Singleton-<version>.tar.gz
-        tar xvf Class-Singleton-<version>.tar
-
-    'cd' into that directory, make, test and install the module:
-
-        cd Class-Singleton-<version>
-        perl Makefile.PL
-        make
-        make test
-        make install
-
-    The '"make install"' will install the module on your system. You may
-    need root access to perform this task. If you install the module in a
-    local directory (for example, by executing ""perl Makefile.PL
-    LIB=~/lib"" in the above - see "perldoc MakeMaker" for full details),
-    you will need to ensure that the "PERL5LIB" environment variable is set
-    to include the location, or add a line to your scripts explicitly naming
-    the library location:
-
-        use lib '/local/path/to/lib';
-
 USING THE CLASS::SINGLETON MODULE
     To import and use the "Class::Singleton" module the following line
     should appear in your Perl program:
