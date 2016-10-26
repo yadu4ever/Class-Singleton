@@ -191,22 +191,13 @@ METHODS
     silently ignored if an instance already exists. You can use the
     has_instance() method to determine if an instance is already defined.
 
-AUTHOR
-    Andy Wardley <abw@wardley.org> <http://wardley.org/>
-
-    Thanks to Andreas Koenig for providing some significant speedup patches
-    and other ideas.
-
-    Steve Hay <shay@cpan.orgt> is now maintaining Class::Singleton as of
-    version 1.5
-
-VERSION
-    This is version 1.6, released TODO
+INSTALLATION
+    See the INSTALL file.
 
 COPYRIGHT
-    Copyright Andy Wardley 1998-2007. All Rights Reserved.
-    Changes in Version 1.5 onwards Copyright (C) 2014 Steve Hay. All rights
-    reserved.
+    Copyright (C) 1998 Canon Research Centre Europe Ltd.
+    Copyright (C) 1998-2008 Andy Wardley. All rights reserved.
+    Copyright (C) 2014 Steve Hay. All rights reserved.
 
 LICENCE
     This distribution is free software; you can redistribute it and/or modify it

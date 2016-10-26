@@ -10,9 +10,8 @@
 # Written by Andy Wardley <abw@wardley.org>
 #
 # Copyright (C) 1998 Canon Research Centre Europe Ltd.
-# Copyright (C) 1998-2008 Andy Wardley.  All Rights Reserved.
-# Changes in Version 1.5 onwards Copyright (C) 2014 Steve Hay.  All rights
-# reserved.
+# Copyright (C) 1998-2008 Andy Wardley.  All rights reserved.
+# Copyright (C) 2014 Steve Hay.  All rights reserved.
 #
 # This module is free software; you can redistribute it and/or modify it under
 # the same terms as Perl itself, i.e. under the terms of either the GNU General
@@ -314,13 +313,13 @@ method to determine if an instance is already defined.
 
 =head1 AUTHOR
 
-Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
+Andy Wardley E<lt>F<abw@wardley.org>E<gt> L<http://wardley.org/>.
 
 Thanks to Andreas Koenig for providing some significant speedup patches and
 other ideas.
 
-Steve Hay E<lt>shay@cpan.orgE<gt> is now maintaining Class::Singleton as of
-version 1.5
+Steve Hay E<lt>F<shay@cpan.org>E<gt> is now maintaining Class::Singleton as of
+version 1.5.
 
 =head1 VERSION
 
@@ -328,9 +327,11 @@ This is version 1.6, released TODO
 
 =head1 COPYRIGHT
 
-Copyright Andy Wardley 1998-2007.  All Rights Reserved.
-Changes in Version 1.5 onwards Copyright (C) 2014 Steve Hay.  All rights
-reserved.
+Copyright (C) 1998 Canon Research Centre Europe Ltd.
+
+Copyright (C) 1998-2008 Andy Wardley.  All rights reserved.
+
+Copyright (C) 2014 Steve Hay.  All rights reserved.
 
 =head1 LICENCE
 
