@@ -1,15 +1,15 @@
 Artistic                                 The "Artistic License"
-Changes                                  Change log
+Changes                                  Differences from previous version
 Copying                                  The GNU General Public License
 INSTALL                                  Detailed installation instructions
+lib/Class/Singleton.pm                   Class::Singleton Perl module
 LICENCE                                  The Licence
-MANIFEST                                 This file
+Makefile.PL                              Makefile writer
+MANIFEST                                 This list of files
 MANIFEST.SKIP                            Manifest skip specs
-Makefile.PL                              ExtUtils::MakeMaker script
-README                                   A brief overview of the distribution
-lib/Class/Singleton.pm                   Class::Singleton module
-t/changes.t                              Test script
-t/critic.t                               Test script
-t/pod.t                                  Test script
-t/pod_coverage.t                         Test script
+README                                   The Instructions
+t/changes.t                              See if Changes file format is OK
+t/critic.t                               See if coding style is OK
+t/pod.t                                  See if POD is OK
+t/pod_coverage.t                         See if POD coverage is OK
 t/singleton.t                            Test script
