@@ -313,13 +313,14 @@ method to determine if an instance is already defined.
 
 =head1 AUTHOR
 
-Andy Wardley E<lt>F<abw@wardley.org>E<gt> L<http://wardley.org/>.
+Andy Wardley E<lt>L<abw@wardley.org|mailto:abw@wardley.org>E<gt>
+L<http://wardley.org/>.
 
 Thanks to Andreas Koenig for providing some significant speedup patches and
 other ideas.
 
-Steve Hay E<lt>F<shay@cpan.org>E<gt> is now maintaining Class::Singleton as of
-version 1.5.
+Steve Hay E<lt>L<shay@cpan.org|mailto:shay@cpan.org>E<gt> is now maintaining
+Class::Singleton as of version 1.5.
 
 =head1 VERSION
 
