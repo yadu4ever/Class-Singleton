@@ -1,6 +1,6 @@
 Revision history for Perl distribution Class-Singleton
 
-1.6 Development
+1.6 2020-12-02
 
     - Fixed confusing Changes entry about Perl's licensing terms.
       [<KENTNL@cpan.org>, CPAN RT#132843]

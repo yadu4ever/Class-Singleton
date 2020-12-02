@@ -380,7 +380,7 @@ Copyright (C) 1998 Canon Research Centre Europe Ltd.
 
 Copyright (C) 1998-2008 Andy Wardley.  All rights reserved.
 
-Copyright (C) 2014 Steve Hay.  All rights reserved.
+Copyright (C) 2014, 2020 Steve Hay.  All rights reserved.
 
 =head1 LICENCE
 
@@ -394,7 +394,7 @@ Version 1.6
 
 =head1 DATE
 
-TODO
+02 Dec 2020
 
 =head1 HISTORY
 
