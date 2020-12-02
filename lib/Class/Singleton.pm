@@ -24,7 +24,7 @@ use 5.008001;
 use strict;
 use warnings;
 
-our $VERSION = 1.6;
+our $VERSION = 1.7;
 my %_INSTANCES = ();
 
 
@@ -390,11 +390,11 @@ License or the Artistic License, as specified in the F<LICENCE> file.
 
 =head1 VERSION
 
-Version 1.6
+Version 1.7
 
 =head1 DATE
 
-02 Dec 2020
+TODO
 
 =head1 HISTORY
 
