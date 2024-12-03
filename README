@@ -9,6 +9,12 @@ SYNOPSIS
     my $one = Class::Singleton->instance();   # returns a new instance
     my $two = Class::Singleton->instance();   # returns same instance
 
+    # Clears existing instance
+    Class::Singleton->clear_instance();       # clears existing instance
+ 
+    my $three = Class::Singleton->instance(); # returns a new instance
+    my $four  = Class::Singleton->instance(); # returns same instance
+
 DESCRIPTION
 
     This is the Class::Singleton module. A Singleton describes an object class

@@ -79,6 +79,20 @@ sub has_instance {
 
 
 #========================================================================
+# clear_instance()
+#
+# Public method to clear the existing instance/object
+# Subsequent call to instance will create new instance
+#========================================================================
+
+sub clear_instance {
+    my $class = shift;
+    $class = ref $class || $class;
+    $_INSTANCES{$class} = undef;
+}
+
+
+#========================================================================
 # _new_instance(...)
 #
 # Simple constructor which returns a hash reference blessed into the 

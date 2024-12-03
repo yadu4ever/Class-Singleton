@@ -69,6 +69,26 @@ sub _new_instance {
     bless $self, $class;
 }
 
+
+#------------------------------------------------------------------------
+# define 'ClearSingleton', which has cleaning needs.
+#------------------------------------------------------------------------
+
+package ClearSingleton;
+use base 'Class::Singleton';
+
+sub _new_instance {
+    my $class  = shift;
+    my $data = shift || {};
+    my $self = {
+        'one' => 'This is the first parameter',
+        'two' => 'This is the second parameter',
+        %$data,
+    };
+    bless $self, $class;
+}
+
+
 #-----------------------------------------------------------------------
 # define 'DestructorSingleton' which has a destructor method
 #-----------------------------------------------------------------------
@@ -175,6 +195,40 @@ ok( $cs2, 'created ConfigSingleton instance 2' );
 is( $cs1, $cs2, 'both config instances are the same object' );
 is( scalar(keys %$cs1), 3, "ConfigSingleton 1 has 3 keys");
 is( scalar(keys %$cs2), 3, "ConfigSingleton 2 has 3 keys");
+
+#------------------------------------------------------------------------
+# test ClearSingleton
+#------------------------------------------------------------------------
+
+# create a ClearSingleton
+my $params = { 'foo' => 'This is foo' };
+my $cls1 = ClearSingleton->instance($params);
+ok( $cls1, 'created ClearSingleton instance 1' );
+
+# add second parameter to the params
+$params->{'bar'} = 'This is bar';
+
+# shouldn't call new() so changes to $params shouldn't matter
+my $cls2 = ClearSingleton->instance($params);
+ok( $cls2, 'created ClearSingleton instance 2' );
+
+is( $cls1, $cls2, 'both ClearSingleton instances are the same object' );
+is( scalar(keys %$cls1), 3, "ClearSingleton 1 has 3 keys");
+is( scalar(keys %$cls2), 3, "ClearSingleton 2 has 3 keys");
+
+# Now clear the existing instance
+ClearSingleton->clear_instance();
+
+# add third parameter to the params
+$params->{'foobar'} = 'This is foo and bar';
+
+# Will call new() so changes to $params will be used
+my $cls3 = ClearSingleton->instance($params);
+ok( $cls3, 'created ClearSingleton instance 3' );
+
+isnt( $cls2, $cls3, 'both ClearSingleton instances are not same object' );
+is( scalar(keys %$cls2), 3, "ClearSingleton 2 has 3 keys");
+is( scalar(keys %$cls3), 5, "ClearSingleton 3 has 5 keys");
 
 
 #-----------------------------------------------------------------------
